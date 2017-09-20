@@ -1,4 +1,4 @@
-package oil.object;
+package object;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +115,7 @@ public class OilOs extends OilObject {
    *
    * @param index the index of the attribute to delete
    */
-  public void deleteOtherAttribute(int index) {
+  public void deleteOtherAttribute(int index) throws InvalidOilException{
     this.otherAttributes.remove(index);
   }
 

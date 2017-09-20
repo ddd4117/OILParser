@@ -1,4 +1,4 @@
-package oil.object;
+package object;
 
 /**
  * A class for the OIL description of an OSEK Event object.

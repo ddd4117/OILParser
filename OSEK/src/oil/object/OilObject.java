@@ -1,4 +1,4 @@
-package oil.object;
+package object;
 
 /**
  * An abstract class for OIL Objects

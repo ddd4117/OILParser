@@ -1,4 +1,4 @@
-package oil.object;
+package object;
 
 /**
  * An OIL attribute

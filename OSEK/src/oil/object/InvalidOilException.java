@@ -1,4 +1,4 @@
-package oil.object;
+package object;
 
 /**
  * Invalid OIL spec exception
