@@ -1,0 +1,73 @@
+OIL_VERSION = "2.5";
+
+IMPLEMENTATION trampoline {
+	TASK {
+		UINT32 STACKSIZE = 32768;
+		UINT32 PRIORITY = 1;
+	};
+	ISR {
+		UINT32 STACKSIZE = 32768;
+	};
+};
+
+CPU default_cpu {
+	OS myOS {
+		STATUS = EXTENDED;
+		ERRORHOOK = TRUE;
+		SHUTDOWNHOOK = TRUE;
+		PRETASKHOOK = TRUE;
+		POSTTASKHOOK = TRUE;
+		BUILD = TRUE {
+			APP_SRC = "g    -lpthread";
+			CFLAGS = "-D   WITH_DEBUG";
+		};
+	};
+	APPMODE std {
+	};
+	TASK t1 {
+		PRIORITY = 1;
+		AUTOSTART = TRUE {
+			APPMODE = std;
+		};
+		SCHEDULE = FULL;
+		ACTIVATION = 1;
+		RESOURCE = r0;
+	};
+	TASK t2 {
+		PRIORITY = 2;
+		AUTOSTART = FALSE;
+		SCHEDULE = FULL;
+		ACTIVATION = 1;
+		RESOURCE = r1;
+		EVENT = e0;
+	};
+	TASK t3 {
+		PRIORITY = 3;
+		AUTOSTART = FALSE;
+		SCHEDULE = FULL;
+		ACTIVATION = 1;
+		RESOURCE = r0;
+		EVENT = e0;
+	};
+	TASK t4 {
+		PRIORITY = 4;
+		AUTOSTART = FALSE;
+		SCHEDULE = NON;
+		ACTIVATION = 1;
+		RESOURCE = r0;
+		EVENT = e0;
+	};
+	RESOURCE r0 {
+		RESOURCEPROPERTY = STANDARD;
+	};
+	RESOURCE r1 {
+		RESOURCEPROPERTY = STANDARD;
+	};
+	EVENT e0 {
+		MASK = AUTO;
+	};
+	EVENT e1 {
+		MASK = AUTO;
+	};
+};
+
