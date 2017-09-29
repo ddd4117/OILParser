@@ -3,6 +3,8 @@ import java.io.IOException;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import object.OilSpec;
+
 public class main {
 
 	public static void main(String[] args) {
@@ -11,16 +13,18 @@ public class main {
 		try {
 			input = new ANTLRFileStream("test2.oil");
 		} catch (IOException e) {
-			// TODO Auto-generated catch blockasdsaasdsadsa
+			// TODO Auto-generated catch
 			e.printStackTrace();
 		}
-		SyntaxLexer lexer = new SyntaxLexer(input);
+		OilLexer lexer = new OilLexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		
-		SyntaxParser parser = new SyntaxParser(tokens);
-		
+		OilParser parser = new OilParser(tokens);
+
 		
 		ParseTree tree = parser.file();
+		OilSpec spec = parser.getOilSpec();
+		System.out.println(spec.toString());
 		//System.out.println(tree.getText());
  		//System.out.println(tree.toStringTree(parser));
 	}
