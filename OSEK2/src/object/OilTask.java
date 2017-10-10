@@ -11,262 +11,280 @@ import java.util.List;
  */
 public class OilTask extends OilObject {
 
-  /**
-   * priority of this task, integer
-   */
-  private int priority = 1;
+	/**
+	 * priority of this task, integer
+	 */
+	private int priority = 1;
 
-  /**
-   * AUTOSTART = {TRUE, FALSE}
-   */
-  private boolean autostart = false;
+	/**
+	 * AUTOSTART = {TRUE, FALSE}
+	 */
+	private boolean autostart = false;
 
-  private String appMode = null;
+	private String appMode = null;
 
-  /**
-   * activation count, integer
-   */
-  private int activation = 1;
+	/**
+	 * activation count, integer
+	 */
+	private int activation = 1;
 
-  /**
-   * SCHEDULE = {FULL, NON}
-   */
-  private boolean schedule = false;
+	/**
+	 * SCHEDULE = {FULL, NON}
+	 */
+	private boolean schedule = false;
 
-  /**
-   * EXTENDED = true or false
-   */
-  private boolean extended = false;
+	/**
+	 * EXTENDED = true or false
+	 */
+	private boolean extended = false;
 
-  // temporarily added for YAML -Seongjun Park
-  private int stackSize = 0x250;
+	// temporarily added for YAML -Seongjun Park
+	private int stackSize = 0x250;
 
-  /**
-   * list of names of accessible resources
-   */
-  private List<String> accessibleResources = new ArrayList<>();
+	/**
+	 * list of names of accessible resources
+	 */
+	private List<String> accessibleResources = new ArrayList<>();
 
-  /**
-   * list of names of accessible events
-   */
-  private List<String> accessibleEvents = new ArrayList<>();
+	/**
+	 * list of names of accessible events
+	 */
+	private List<String> accessibleEvents = new ArrayList<>();
 
-  public OilTask() {
-  }
-  
-  public OilTask(OilTask task) throws InvalidOilException {
-    this.setName(task.getName());
-    this.priority = task.priority;
-    this.autostart = task.autostart;
-    this.appMode = task.appMode;
-    this.activation = task.activation;
-    this.schedule = task.schedule;
-    this.extended = task.extended;
-    this.stackSize = task.stackSize;
-    for(String res : task.accessibleResources) {
-      this.accessibleResources.add(res);
-    }
-    for(String ev : task.accessibleEvents) {
-      this.accessibleEvents.add(ev);
-    }
-  }
+	public OilTask() {
+	}
 
-  public void addResource(String res) {
-    this.accessibleResources.add(res);
-  }
+	public OilTask(OilTask task) throws InvalidOilException {
+		this.setName(task.getName());
+		this.priority = task.priority;
+		this.autostart = task.autostart;
+		this.appMode = task.appMode;
+		this.activation = task.activation;
+		this.schedule = task.schedule;
+		this.extended = task.extended;
+		this.stackSize = task.stackSize;
+		for (String res : task.accessibleResources) {
+			this.accessibleResources.add(res);
+		}
+		for (String ev : task.accessibleEvents) {
+			this.accessibleEvents.add(ev);
+		}
+	}
 
-  public void addEvent(String evt) {
-    if (!this.extended) {
-      this.extended = true;
-    }
-    this.accessibleEvents.add(evt);
-  }
+	public void addResource(String res) {
+		this.accessibleResources.add(res);
+	}
 
-  /**
-   * @param autostart the autostart to set
-   */
-  public void setAutostart(boolean autostart) {
-    this.autostart = autostart;
-  }
+	public void addEvent(String evt) {
+		if (!this.extended) {
+			this.extended = true;
+		}
+		this.accessibleEvents.add(evt);
+	}
 
-  /**
-   * @param appMode an APPMODE to set
-   */
-  public void setAppMode(String appMode) {
-    this.appMode = appMode;
-  }
+	/**
+	 * @param autostart
+	 *            the autostart to set
+	 */
+	public void setAutostart(boolean autostart) {
+		this.autostart = autostart;
+	}
 
-  /**
-   * @param activation the activation to set
-   * @throws InvalidOilException invalid activation value
-   */
-  public void setActivation(int activation) throws InvalidOilException {
-    OilSpecValidator.validateUint32(activation);
-    this.activation = activation;
-  }
+	/**
+	 * @param appMode
+	 *            an APPMODE to set
+	 */
+	public void setAppMode(String appMode) {
+		this.appMode = appMode;
+	}
 
-  /**
-   * @param schedule the schedule to set
-   */
-  public void setSchedule(boolean schedule) {
-    this.schedule = schedule;
-  }
+	/**
+	 * @param activation
+	 *            the activation to set
+	 * @throws InvalidOilException
+	 *             invalid activation value
+	 */
+	public void setActivation(int activation) throws InvalidOilException {
+		OilSpecValidator.validateUint32(activation);
+		this.activation = activation;
+	}
 
-  /**
-   * @param priority the priority to set
-   * @throws InvalidOilException invalid integer range
-   */
-  public void setPriority(int priority) throws InvalidOilException {
-    OilSpecValidator.validateUint32(priority);
-    this.priority = priority;
-  }
+	/**
+	 * @param schedule
+	 *            the schedule to set
+	 */
+	public void setSchedule(boolean schedule) {
+		this.schedule = schedule;
+	}
 
-  /**
-   * @return the accessibleResources
-   */
-  public List<String> getAccessingResources() {
-    return accessibleResources;
-  }
+	/**
+	 * @param priority
+	 *            the priority to set
+	 * @throws InvalidOilException
+	 *             invalid integer range
+	 */
+	public void setPriority(int priority) throws InvalidOilException {
+		OilSpecValidator.validateUint32(priority);
+		this.priority = priority;
+	}
 
-  /**
-   * @return the accessibleEvents
-   */
-  public List<String> getAccessingEvents() {
-    return accessibleEvents;
-  }
+	/**
+	 * @return the accessibleResources
+	 */
+	public List<String> getAccessingResources() {
+		return accessibleResources;
+	}
 
-  /**
-   * Checks whether this task owns an event given as argument
-   *
-   * @param e An OIL Event
-   * @return true if this task owns the event
-   */
-  public boolean isOwnsEvent(OilEvent e) {
-    for (String eName : this.accessibleEvents) {
-      if (eName.equals(e.getName())) {
-        return true;
-      }
-    }
-    return false;
-  }
+	/**
+	 * @return the accessibleEvents
+	 */
+	public List<String> getAccessingEvents() {
+		return accessibleEvents;
+	}
 
-  /**
-   * @return the priority
-   */
-  public int getPriority() {
-    return priority;
-  }
+	/**
+	 * Checks whether this task owns an event given as argument
+	 *
+	 * @param e
+	 *            An OIL Event
+	 * @return true if this task owns the event
+	 */
+	public boolean isOwnsEvent(OilEvent e) {
+		for (String eName : this.accessibleEvents) {
+			if (eName.equals(e.getName())) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-  public boolean containsEvent(OilEvent evt) {
-    for (String oe : getAccessingEvents()) {
-      if (oe.equals(evt.getName())) {
-        return true;
-      }
-    }
-    return false;
-  }
+	/**
+	 * @return the priority
+	 */
+	public int getPriority() {
+		return priority;
+	}
 
-  /**
-   * @return the autostart
-   */
-  public boolean isAutostart() {
-    return autostart;
-  }
+	public boolean containsEvent(OilEvent evt) {
+		for (String oe : getAccessingEvents()) {
+			if (oe.equals(evt.getName())) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-  /**
-   * @return APPMODE
-   * @throws IllegalAccessException when this task is not an AUTOSTART task
-   */
-  public String getAppMode() throws IllegalAccessException {
-    if (this.appMode == null) {
-      throw new IllegalAccessException("only autostart tasks can have APPMODE");
-    }
-    return this.appMode;
-  }
+	/**
+	 * @return the autostart
+	 */
+	public boolean isAutostart() {
+		return autostart;
+	}
 
-  /**
-   * @return the activation
-   */
-  public int getActivation() {
-    return activation;
-  }
+	/**
+	 * @return APPMODE
+	 * @throws IllegalAccessException
+	 *             when this task is not an AUTOSTART task
+	 */
+	public String getAppMode() throws IllegalAccessException {
+		if (this.appMode == null) {
+			throw new IllegalAccessException("only autostart tasks can have APPMODE");
+		}
+		return this.appMode;
+	}
 
-  /**
-   * @return the schedule
-   */
-  public boolean isSchedule() {
-    return schedule;
-  }
+	/**
+	 * @return the activation
+	 */
+	public int getActivation() {
+		return activation;
+	}
 
-  /**
-   * @return the extended
-   */
-  public boolean isExtended() {
-    return extended;
-  }
+	/**
+	 * @return the schedule
+	 */
+	public boolean isSchedule() {
+		return schedule;
+	}
 
-  // temporarily added for YAML -Seongjun Park
-  public int getStackSize() {
-    return this.stackSize;
-  }
+	/**
+	 * @return the extended
+	 */
+	public boolean isExtended() {
+		return extended;
+	}
 
-  /**
-   * update isExtended value of this task by checking whether it has any
-   * accessing events
-   */
-  public void updateIsExtended() {
-    this.extended = this.accessibleEvents.isEmpty();
-  }
+	// temporarily added for YAML -Seongjun Park
+	public int getStackSize() {
+		return this.stackSize;
+	}
 
-  @Override
-  public String toString() {
-    return "OilTask: " + this.getName() + ", " + getPriority() + ", "
-        + isAutostart() + ", " + getActivation() + ", " + isSchedule() + ", "
-        + isExtended() + ", " + getAccessingResources() + ", "
-        + getAccessingEvents();
-  }
+	/**
+	 * update isExtended value of this task by checking whether it has any
+	 * accessing events
+	 */
+	public void updateIsExtended() {
+		this.extended = this.accessibleEvents.isEmpty();
+	}
 
-  @Override
-  public void addAttribute(String name, String value)
-      throws NumberFormatException, InvalidOilException {
-    switch (name) {
-      case "PRIORITY":
-        setPriority(Integer.parseInt(value));
-        break;
-      case "AUTOSTART":
-        if(value == "TRUE")
-          setAutostart(true);
-        break;
-      case "SCHEDULE":
-        // FULL or NON
-        setSchedule("FULL".equals(value));
-        break;
-      case "ACTIVATION":
-        setActivation(Integer.parseInt(value));
-        break;
-      case "RESOURCE":
-        addResource(value);
-        break;
-      case "EVENT":
-        addEvent(value);
-        break;
-      default:
-    	  /* error case */
-        break;
-    }
-  }
+	@Override
+	public String toString() {
+		if (this.autostart) {
+			try {
+				return "OilTask: " + this.getName() + ", " + getPriority() + ", " + isAutostart() + ", "
+						+ this.getAppMode() + ", " + getActivation() + ", " + isSchedule() + ", " + isExtended() + ", "
+						+ getAccessingResources() + ", " + getAccessingEvents();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		} else
+			return "OilTask: " + this.getName() + ", " + getPriority() + ", " + isAutostart() + ", " + getActivation()
+					+ ", " + isSchedule() + ", " + isExtended() + ", " + getAccessingResources() + ", "
+					+ getAccessingEvents();
+
+	}
+
+	@Override
+	public void addAttribute(String name, String value) throws NumberFormatException, InvalidOilException {
+		switch (name) {
+		case "PRIORITY":
+			setPriority(Integer.parseInt(value));
+			break;
+		case "AUTOSTART":
+			if (value.equals("TRUE"))
+				setAutostart(true);
+			break;
+		case "SCHEDULE":
+			// FULL or NON
+			setSchedule("FULL".equals(value));
+			break;
+		case "ACTIVATION":
+			setActivation(Integer.parseInt(value));
+			break;
+		case "RESOURCE":
+			addResource(value);
+			break;
+		case "EVENT":
+			addEvent(value);
+			break;
+		default:
+			/* error case */
+			break;
+		}
+	}
 
 	@Override
 	public void addAttribute(String list_name, String list_value, String name, String value)
 			throws NumberFormatException, InvalidOilException {
 		// TODO Auto-generated method stub
-			if(list_name == "AUTOSTART")
-			{
-				if(this.autostart)
-				{
-					if(name == "APPMODE") setAppMode(value);
-				}
+		if (list_name.equals("AUTOSTART")) {
+			if (this.autostart) {
+				if (name.equals("APPMODE"))
+					setAppMode(value);
 			}
-			else{ /* error case */}
+		} else {
+			/* error case */}
 	}
 }

@@ -11,7 +11,7 @@ public class main {
 		// TODO Auto-generated method stub
 		CharStream input = null;
 		try {
-			input = new ANTLRFileStream("test3.oil");
+			input = new ANTLRFileStream("sselab.oil");
 		} catch (IOException e) {
 			// TODO Auto-generated catch
 			e.printStackTrace();

@@ -35,7 +35,7 @@ public class OilOs extends OilObject {
   private boolean protectionHook = false;
   private boolean startupHook = true;
   private String includeFileName = "sample1.h";
-
+  private boolean build = false;
   public OilOs() throws InvalidOilException {
     this("myOS", "\"test.c\"", "STANDARD");
   }
@@ -81,10 +81,33 @@ public class OilOs extends OilObject {
   public void addAttribute(String list_name, String list_value, String name, String value)
   		throws NumberFormatException, InvalidOilException {
   	// TODO Auto-generated method stub
-  	if(list_name == "BUILD")
+  	if(list_name.equals("BUILD"))
   	{
-  		otherAttributes.add(new OilAttribute(name, value));
+  		if(list_value.equals("true")) this.build = true;
   	}
+  	switch (name) {
+    case "APP_SRC":
+      setAppSrc(value);
+      break;
+    case "STATUS":
+      setStatus(value);
+      break;
+    case "ERRORHOOK":
+      setErrorHook("TRUE".equals(value));
+      break;
+    case "SHUTDOWNHOOK":
+      setShutdownHook("TRUE".equals(value));
+      break;
+    case "PRETASKHOOK":
+      setPretaskHook("TRUE".equals(value));
+      break;
+    case "POSTTASKHOOK":
+      setPosttaskHook("TRUE".equals(value));
+      break;
+    default:
+    	otherAttributes.add(new OilAttribute(name, value));
+  	  break;
+  }
   }
   
   /**
@@ -116,7 +139,7 @@ public class OilOs extends OilObject {
         setPosttaskHook("TRUE".equals(value));
         break;
       default:
-    	  /* error case */
+    	  otherAttributes.add(new OilAttribute(name, value));
     	  break;
     }
   }
@@ -278,7 +301,4 @@ public class OilOs extends OilObject {
     }
     return retval;
   }
-
-
-
 }

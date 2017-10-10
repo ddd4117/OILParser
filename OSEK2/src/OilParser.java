@@ -1728,12 +1728,6 @@ public class OilParser extends Parser {
 				setState(304);
 				String temp = this.getCurrentToken().getText();
 				number();
-//				try {
-////					currentObject.addAttribute(_Name, temp);
-//				} catch (NumberFormatException | InvalidOilException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
 			}
 				break;
 			case 2:
@@ -1743,12 +1737,6 @@ public class OilParser extends Parser {
 				String temp = this.getCurrentToken().getText();
 				setState(306);
 				match(T__31);
-//				try {
-////					currentObject.addAttribute(_Name, temp);
-//				} catch (NumberFormatException | InvalidOilException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
 			}
 				break;
 			case 3:
@@ -1758,12 +1746,6 @@ public class OilParser extends Parser {
 				setState(308);
 				String temp = this.getCurrentToken().getText();
 				match(T__32);
-//				try {
-//					currentObject.addAttribute(_Name, temp);
-//				} catch (NumberFormatException | InvalidOilException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
 			}
 				break;
 			case 4:
@@ -3226,18 +3208,6 @@ public class OilParser extends Parser {
 			}
 				break;
 			}
-			/** process parameter list */
-			/*
-			if (flag == false) {
-				try {
-					System.out.println(_Name + " " + temp);
-					currentObject.addAttribute(_Name, temp);
-				} catch (NumberFormatException | InvalidOilException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			*/
 		} catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);

@@ -1,0 +1,85 @@
+OIL_VERSION = "2.5" : "app_tjb";
+
+IMPLEMENTATION trampoline{
+	TASK{
+		UINT32 STACKSIZE = 32768;
+		UINT32 PRIORITY = 1;
+	};
+	ISR{
+		UINT32 STACKSIZE = 32768;
+	};
+};
+
+CPU app_tjb{
+
+	OS config{
+		STATUS = STANDARD;
+
+		ERRORHOOK = TRUE;
+		SHUTDOWNHOOK = TRUE;
+		PRETASKHOOK = TRUE;
+		POSTTASKHOOK = TRUE;
+
+		APP_SRC = "test.c";
+		TRAMPOLINE_BASE_PATH = "../..";
+		CFLAGS = "-g";
+		CFLAGS = "-Wall -pedantic -Wformat -std=c99 -D_XOPEN_SOURCE=600";
+		CFLAGS = "-Wmissing-field-initializers";
+		CFLAGS = "-DWITH_DEBUG -fprofile-arcs -ftest-coverage";
+		ASFLAGS = "";
+		LDFLAGS = "-g -lpthread -fprofile-arcs -ftest-coverage";
+		COMPILER = "gcc";	// change
+		LINKER = "gcc";		// change: csgcc gcc
+		ASSEMBLER = "as";
+	};
+
+	APPMODE std_tjb{
+	};
+
+	TASK t1{
+		PRIORITY = 1;
+		AUTOSTART = TRUE {
+			APPMODE = std_tjb;
+		};
+		SCHEDULE = FULL;
+		ACTIVATION = 1;
+		RESOURCE = r1;
+	};
+
+	TASK t2{
+		PRIORITY = 2;
+		AUTOSTART = FALSE;
+		SCHEDULE = FULL;
+		ACTIVATION = 1;
+		EVENT = e1;
+		EVENT = e2;
+	};
+
+	TASK t3{
+		PRIORITY = 3;
+		AUTOSTART = FALSE;
+		SCHEDULE = NON;
+		ACTIVATION = 1;
+		RESOURCE = r1;
+		RESOURCE = r2;
+		EVENT = e2;
+	};
+
+
+	RESOURCE r1{
+		RESOURCEPROPERTY = STANDARD;
+	};
+
+	RESOURCE r2{
+		RESOURCEPROPERTY = STANDARD;
+	};
+
+
+	EVENT e1{
+		MASK = AUTO;
+	};
+
+	EVENT e2{
+		MASK = AUTO;
+	};
+};

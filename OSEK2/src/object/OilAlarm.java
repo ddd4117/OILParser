@@ -143,7 +143,6 @@ public class OilAlarm extends OilObject {
 		      break;
 	    default:
 	      break;
-	      
 	    }
 	  }
   
