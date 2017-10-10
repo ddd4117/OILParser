@@ -264,8 +264,7 @@ public class OilTask extends OilObject {
 			{
 				if(this.autostart)
 				{
-					if(name == "APPMODE")
-						this.appMode = value;
+					if(name == "APPMODE") setAppMode(value);
 				}
 			}
 			else{ /* error case */}

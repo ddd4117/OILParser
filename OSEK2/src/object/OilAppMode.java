@@ -11,7 +11,6 @@ public class OilAppMode extends OilObject {
 
   public OilAppMode() {
   }
-
   /**
    * @param name
    *          name of this appmode

@@ -363,6 +363,12 @@ public class OilParser extends Parser {
 				setState(112);
 				match(T__3);
 				setState(113);
+				try {
+					oil.setCpuName(this.getCurrentToken().getText());
+				} catch (InvalidOilException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				match(NAME);
 				setState(114);
 				match(T__4);
@@ -813,7 +819,7 @@ public class OilParser extends Parser {
 				Object temp = this.getCurrentToken().getText();
 				setState(164);
 				object();
-				makeObject((String) temp);
+				//makeObject((String) temp);
 				setState(165);
 				match(T__4);
 				setState(166);
@@ -1722,12 +1728,12 @@ public class OilParser extends Parser {
 				setState(304);
 				String temp = this.getCurrentToken().getText();
 				number();
-				try {
-					currentObject.addAttribute(_Name, temp);
-				} catch (NumberFormatException | InvalidOilException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+//				try {
+////					currentObject.addAttribute(_Name, temp);
+//				} catch (NumberFormatException | InvalidOilException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 			}
 				break;
 			case 2:
@@ -1737,12 +1743,12 @@ public class OilParser extends Parser {
 				String temp = this.getCurrentToken().getText();
 				setState(306);
 				match(T__31);
-				try {
-					currentObject.addAttribute(_Name, temp);
-				} catch (NumberFormatException | InvalidOilException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+//				try {
+////					currentObject.addAttribute(_Name, temp);
+//				} catch (NumberFormatException | InvalidOilException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 			}
 				break;
 			case 3:
@@ -1752,12 +1758,12 @@ public class OilParser extends Parser {
 				setState(308);
 				String temp = this.getCurrentToken().getText();
 				match(T__32);
-				try {
-					currentObject.addAttribute(_Name, temp);
-				} catch (NumberFormatException | InvalidOilException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+//				try {
+//					currentObject.addAttribute(_Name, temp);
+//				} catch (NumberFormatException | InvalidOilException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 			}
 				break;
 			case 4:
@@ -4284,16 +4290,9 @@ public class OilParser extends Parser {
 		} else if (currentObject instanceof OilISR) {
 			oil.addIsr((OilISR) currentObject);
 		} else if (currentObject instanceof OilOs) {
-			/*
-			if (!((OilOs) currentObject).getOtherAttributes().isEmpty()) {
-				String[] temp = ((OilOs) currentObject).getOtherAttributes().get(0).toString().split(" = \"");
-				((OilOs) currentObject).setAppSrc(temp[1]);
-				((OilOs) currentObject).getOtherAttributes().remove(0);
-			}
-			*/
 			oil.setOs((OilOs) currentObject);
 		} else if (currentObject instanceof OilAppMode) {
-
+			oil.addAppMode((OilAppMode)currentObject);
 		}
 	}
 
@@ -4302,7 +4301,6 @@ public class OilParser extends Parser {
 		case "OS":
 			try {
 				currentObject = new OilOs();
-				currentObject.setName(Name);
 			} catch (InvalidOilException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -4310,70 +4308,31 @@ public class OilParser extends Parser {
 			break;
 		case "APPMODE":
 			currentObject = new OilAppMode();
-			try {
-				currentObject.setName(Name);
-			} catch (InvalidOilException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			break;
 		case "TASK":
 			currentObject = new OilTask();
-			try {
-				currentObject.setName(Name);
-			} catch (InvalidOilException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			break;
 		case "RESOURCE":
 			currentObject = new OilResource();
-			try {
-				currentObject.setName(Name);
-			} catch (InvalidOilException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			break;
 		case "EVENT":
 			currentObject = new OilEvent();
-			try {
-				currentObject.setName(Name);
-			} catch (InvalidOilException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			break;
 		case "ALARM":
 			currentObject = new OilAlarm();
-			try {
-				currentObject.setName(Name);
-			} catch (InvalidOilException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			break;
 		case "ISR":
 			currentObject = new OilISR();
-			try {
-				currentObject.setName(Name);
-			} catch (InvalidOilException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			break;
 		case "COUNTER":
 			try {
 				currentObject = new OilCounter();
-				currentObject.setName(Name);
 			} catch (InvalidOilException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			break;
 		}
-		
-			
 	}
 	public void addAttribute_list(){
 		String list_name = (String)attr_list.poll();
@@ -4393,6 +4352,5 @@ public class OilParser extends Parser {
 	public OilSpec getOilSpec() {
 	    this.oil.updateCeilingPriority();
 	    return this.oil;
-	  }
-
+	}
 }
