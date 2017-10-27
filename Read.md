@@ -20,19 +20,8 @@ OILParser
 	private OilSpec oil = new OilSpec();
 </code></pre>
 ======================
-# OilParserControl에 대한 설명
-	대부분 OilParser에서 선언한 변수를 넣어주기만 하면된다.
-	OilParser에서 현재 토큰의 스트링을 가져오는 방법은
-	"this.getCurrentToken().getText()"을 하면된다.
-	아래의 temp는 대부분 temp = this.getCurrentToken().getText()이다.
-	
-# 1. public void finalizeOilObjCreation(OilObject currentObject, OilSpec oil)
-	ex) ctl.finalizeOilObjCreation(currentObject, oil);
-	
-# 2. public OilObject makeObject(String Name)
-	currentObject = ctl.makeObject(temp);
 
-# 3. addAttribute(String name, String value) vs addAttribute(String name, String value)
+# addAttribute(String name, String value) vs addAttribute(String name, String value)
 <pre><code>
 	OS config {
 		STATUS = STANDARD;
@@ -60,17 +49,32 @@ OILParser
 		...
 	} 
 	부분은 한번에 추가해 줄 수 없어 queue에 attribute_list를 추가후 중괄호가 끝나면 저장을 하게한다.
-	이때 필요한게 위에 선언한 flag인데, flag는 attribute_list로 갈 경우 flag = true로, 끝나면 flase로 설정해줘야한다.
-# 4. public void addAttribute_list(Queue attr_list, OilObject currentObject)
+	이때 필요한게 위에 선언한 flag인데, flag는 attribute_list로 갈 경우 flag = true로, 끝나면 flase로 설정해줘야한다.	
+# OilParserControl에 대한 설명
+	대부분 OilParser에서 선언한 변수를 넣어주기만 하면된다.
+	
+	OilParser에서 현재 토큰의 스트링을 가져오는 방법은
+
+	"this.getCurrentToken().getText()"을 하면된다.
+	
+	아래의 temp는 대부분 temp = this.getCurrentToken().getText()이다.
+## 1. public void finalizeOilObjCreation(OilObject currentObject, OilSpec oil)
+	ex) ctl.finalizeOilObjCreation(currentObject, oil);
+	
+## 2. public OilObject makeObject(String Name)
+	currentObject = ctl.makeObject(temp);
+
+
+## 3. public void addAttribute_list(Queue attr_list, OilObject currentObject)
 	list
 	currentObject.addAttribute(_Name, temp);
 	
 
 
-# 5. public OilSpec getOilSpec(OilSpec oil)
-# 6. public void setID(OilSpec oil)
-# 7. private void putIdsOn(List<OilObject> objs)
-# 8. private void putIdsOnResources(List<OilResource> objs)
+## 4. public OilSpec getOilSpec(OilSpec oil)
+## 5. public void setID(OilSpec oil)
+## 6. private void putIdsOn(List<OilObject> objs)
+## 7. private void putIdsOnResources(List<OilResource> objs)
 
 
 ### ● 순서없는 목록(글머리 기호)
