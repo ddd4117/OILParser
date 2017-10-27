@@ -23,6 +23,7 @@ OILParser
 
 # addAttribute(String name, String value) vs addAttribute(String list_name, String list_value, String name, String value)
 <pre><code>
+//test.oil code
 	OS config {
 		STATUS = STANDARD;
 		ERRORHOOK = TRUE;
