@@ -141,3 +141,18 @@ case 2: /** NAME  { parameter_liost } **/
 ## 5. public void setID(OilSpec oil)
 ## 6. private void putIdsOn(List<OilObject> objs)
 ## 7. private void putIdsOnResources(List<OilResource> objs)
+
+======================
+# etc
+	CharStream input = null;
+		try {
+			input = new ANTLRFileStream("periodic.oil");
+			OilLexer lexer = new OilLexer(input);
+			CommonTokenStream tokens = new CommonTokenStream(lexer);
+			OilParser parser = new OilParser(tokens);
+			ParseTree tree = parser.file();
+			OilSpec spec = parser.getCtl().getOilSpec(parser.getOil());
+		} catch (IOException e) {
+			// TODO Auto-generated catch
+			e.printStackTrace();
+		}
