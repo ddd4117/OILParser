@@ -21,7 +21,7 @@ OILParser
 </code></pre>
 ======================
 
-# addAttribute(String name, String value) vs addAttribute(String name, String value)
+# addAttribute(String name, String value) vs addAttribute(String list_name, String list_value, String name, String value)
 <pre><code>
 	OS config {
 		STATUS = STANDARD;
@@ -48,8 +48,36 @@ OILParser
 	BUILD = TRUE{
 		...
 	} 
-	부분은 한번에 추가해 줄 수 없어 queue에 attribute_list를 추가후 중괄호가 끝나면 저장을 하게한다.
-	이때 필요한게 위에 선언한 flag인데, flag는 attribute_list로 갈 경우 flag = true로, 끝나면 flase로 설정해줘야한다.	
+	부분은 한번에 추가해 줄 수 없어 queue에 attribute_list를 추가후 Build문이 끝나면 한번에 저장을 한다.
+		addAttribute_list(Queue attr_list, OilObject currentObject);
+	
+	그리고 필요한게 위에 선언한 flag인데, flag는 attribute_list로 갈 경우 flag = true로, 끝나면 flase로 설정해줘야한다.	
+<pre><code>
+case 2: /** NAME  { parameter_liost } **/
+				flag = true;
+				enterOuterAlt(_localctx, 2); {
+				setState(439);
+				try {
+					String value = this.getCurrentToken().getText();
+					attr_list.offer(_Name);
+					attr_list.offer(value);
+					currentObject.addAttribute(_Name, value);
+				} catch (NumberFormatException  | InvalidOilException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				match(NAME);
+				setState(440);
+				match(T__4);
+				setState(441);
+				parameter_list(0);
+				setState(442);
+				match(T__5);
+				ctl.addAttribute_list(attr_list, currentObject);
+				flag = false;
+			}
+				break;
+</code></pre>
 # OilParserControl에 대한 설명
 	대부분 OilParser에서 선언한 변수를 넣어주기만 하면된다.
 	
@@ -58,6 +86,7 @@ OILParser
 	"this.getCurrentToken().getText()"을 하면된다.
 	
 	아래의 temp는 대부분 temp = this.getCurrentToken().getText()이다.
+	
 ## 1. public void finalizeOilObjCreation(OilObject currentObject, OilSpec oil)
 	ex) ctl.finalizeOilObjCreation(currentObject, oil);
 	
@@ -65,11 +94,8 @@ OILParser
 	currentObject = ctl.makeObject(temp);
 
 
-## 3. public void addAttribute_list(Queue attr_list, OilObject currentObject)
-	list
-	currentObject.addAttribute(_Name, temp);
-	
-
+## 3. public void addAttribute_list(Queue attr_list, OilObject currentObject)	
+	ctl.addAttribute_list(attr_list, currentObject);
 
 ## 4. public OilSpec getOilSpec(OilSpec oil)
 ## 5. public void setID(OilSpec oil)
