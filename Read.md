@@ -54,6 +54,7 @@ OILParser
 	
 	그리고 필요한게 위에 선언한 flag인데, flag는 attribute_list로 갈 경우 flag = true로, 끝나면 flase로 설정해줘야한다.	
 <pre><code>
+//OilParser Attribute_value() method 
 case 2: /** NAME  { parameter_liost } **/
 				flag = true;
 				enterOuterAlt(_localctx, 2); {
