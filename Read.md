@@ -18,17 +18,59 @@ OILParser
 	 private OilParserControl ctl = new OilParserControl();
 	
 	private OilSpec oil = new OilSpec();
-	
-	 위의 변수들을 OilParser 클래스에 선언한다.
 </code></pre>
+======================
+# OilParserControl에 대한 설명
+	대부분 OilParser에서 선언한 변수를 넣어주기만 하면된다.
+	OilParser에서 현재 토큰의 스트링을 가져오는 방법은
+	"this.getCurrentToken().getText()"을 하면된다.
+	아래의 temp는 대부분 temp = this.getCurrentToken().getText()이다.
+	
 # 1. public void finalizeOilObjCreation(OilObject currentObject, OilSpec oil)
+	ex) ctl.finalizeOilObjCreation(currentObject, oil);
+	
 # 2. public OilObject makeObject(String Name)
-# 3. public void addAttribute_list(Queue attr_list, OilObject currentObject)
-# 4. public OilSpec getOilSpec(OilSpec oil)
-# 5. public void setID(OilSpec oil)
-# 6. private void putIdsOn(List<OilObject> objs)
-# 7. private void putIdsOnResources(List<OilResource> objs)
+	currentObject = ctl.makeObject(temp);
 
+# 3. addAttribute(String name, String value) vs addAttribute(String name, String value)
+<pre><code>
+	OS config {
+		STATUS = STANDARD;
+		ERRORHOOK = TRUE;
+		SHUTDOWNHOOK = TRUE;
+		PRETASKHOOK = TRUE;
+		POSTTASKHOOK = TRUE;
+		BUILD = TRUE {
+			APP_SRC = "./..";
+			CFLAGS = "-g";
+			CFLAGS = "-Wall -pedantic -Wformat -std=c99 -D_XOPEN_SOURCE=600";
+			CFLAGS = "-Wmissing-field-initializers";
+			CFLAGS = "-DWITH_DEBUG -fprofile-arcs -ftest-coverage";
+			ASFLAGS = "";
+			LDFLAGS = "-g -lpthread -fprofile-arcs -ftest-coverage";
+			COMPILER = "gcc";
+			LINKER = "gcc";
+			ASSEMBLER = "as";
+		};
+	};
+</code></pre>
+	위의 코드에서 STATUS, ERRORHOOK같은 부분들은 바로 추가할 수 있다.
+	하지만 
+	BUILD = TRUE{
+		...
+	} 
+	부분은 한번에 추가해 줄 수 없어 queue에 attribute_list를 추가후 중괄호가 끝나면 저장을 하게한다.
+	이때 필요한게 위에 선언한 flag인데, flag는 attribute_list로 갈 경우 flag = true로, 끝나면 flase로 설정해줘야한다.
+# 4. public void addAttribute_list(Queue attr_list, OilObject currentObject)
+	list
+	currentObject.addAttribute(_Name, temp);
+	
+
+
+# 5. public OilSpec getOilSpec(OilSpec oil)
+# 6. public void setID(OilSpec oil)
+# 7. private void putIdsOn(List<OilObject> objs)
+# 8. private void putIdsOnResources(List<OilResource> objs)
 
 
 ### ● 순서없는 목록(글머리 기호)
