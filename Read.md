@@ -2,12 +2,24 @@ OILParser
 ======================
 # 시작전에 OILParser에 선언 
 <pre><code>
+	/** currentObject는 현재 파싱되어지는 Object 객체이다 **/
 	private OilObject currentObject;
+	
+	/** _Name : 현재 오브젝트의 이름 또는 정보를 저장하는 변수 **/
 	public String _Name = "";
+	
+	/** attr_list ; Object의 속성중에서 list단위로 관리할 경우 사용되어지는 변수 **/
 	public Queue attr_list = new LinkedList();
+	
+	/** flag : 속성이 list인지 아니지 판단하는 변수 **/
 	static boolean flag = false;
-	/** flag == false is Not List, flag == true is parameter list */
+	
+	/** OilParserControl ctl : OilParserControl 은 Object를 생성하거나 속성을 추가하는 클래스 **/
+	 private OilParserControl ctl = new OilParserControl();
+	
 	private OilSpec oil = new OilSpec();
+	
+	 위의 변수들을 OilParser 클래스에 선언한다.
 </code></pre>
 # 1. public void finalizeOilObjCreation(OilObject currentObject, OilSpec oil)
 # 2. public OilObject makeObject(String Name)
