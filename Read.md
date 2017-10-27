@@ -53,6 +53,22 @@ OILParser
 		addAttribute_list(Queue attr_list, OilObject currentObject);
 	
 	그리고 필요한게 위에 선언한 flag인데, flag는 attribute_list로 갈 경우 flag = true로, 끝나면 flase로 설정해줘야한다.	
+	flag의 위치는 grammar의 위치로 파악할 수 있다. 예를들어,
+	
+	Oil.g4 grammar에서
+	attribute_value
+	:
+		NAME
+		| NAME '{' parameter_list '}'
+		| bool
+		| bool '{' parameter_list '}'
+		| number
+		| float_num
+		| STRING
+		| 'AUTO'
+	;
+	로 선언되어 있다. 여기서 NAME, bool, number, float_num, STRING, 'AUTO' 에서는 currentObject.addAttribute()로 넣어주면된다.
+	하지만 NAME { }, bool { } 은 리스트가 더 존재하기 때문에, 이 함수가 시작되는 부분에서 flag = true를 하고 끝부분에 flag = false와 addAttribute를 하면된다.	
 	
 <pre><code>
 //OilParser Attribute_value() method
