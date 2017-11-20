@@ -1,0 +1,253 @@
+//
+//OIL file: cardgame.oil
+//
+
+OIL_VERSION = "2.0";
+//#include <ppcaxiomcme555.oil>
+
+
+CPU cardgame {
+   
+   /**************************************************************************/
+   /*             Tasks                                                      */
+   /**************************************************************************/
+
+   TASK DealCards {
+           TYPE = EXTENDED;
+           SCHEDULE = FULL;
+           PRIORITY = 10;
+           ACTIVATION = 1;
+           AUTOSTART = FALSE;
+           STACKSIZE = 64;
+           SCHEDULE_CALL = FALSE;
+           EVENT = { ABORT_SHUFFLE, SHUFFLED };
+           RESOURCE = { CARDDECK };
+   };
+
+   TASK DealerTurn {
+           TYPE = BASIC;
+           SCHEDULE = FULL;
+           PRIORITY = 6;
+           ACTIVATION = 1;
+           AUTOSTART = FALSE;
+           STACKSIZE = 128;
+           SCHEDULE_CALL = FALSE;
+   };
+
+   TASK IOSampleKeypad {
+           TYPE = BASIC;
+           SCHEDULE = FULL;
+           PRIORITY = 8;
+           ACTIVATION = 1;
+           AUTOSTART = FALSE;
+           STACKSIZE = 64;
+           SCHEDULE_CALL = FALSE;
+   };
+
+   TASK IOSampleShuffleSwitch {
+           TYPE = BASIC;
+           SCHEDULE = FULL;
+           PRIORITY = 14;
+           ACTIVATION = 1;
+           AUTOSTART = FALSE;
+           STACKSIZE = 64;
+           SCHEDULE_CALL = FALSE;
+   };
+
+   TASK InitAlarms {
+           /*@****************************************************************/
+           /* Must be highest priority in the system.                        */
+           /*@****************************************************************/
+
+           TYPE = BASIC;
+           SCHEDULE = FULL;
+           PRIORITY = 16;
+           ACTIVATION = 1;
+           AUTOSTART = TRUE;
+           STACKSIZE = 64;
+           SCHEDULE_CALL = FALSE;
+   };
+
+   TASK OutputDisplay {
+           TYPE = BASIC;
+           SCHEDULE = FULL;
+           PRIORITY = 12;
+           ACTIVATION = 1;
+           AUTOSTART = FALSE;
+           STACKSIZE = 64;
+           SCHEDULE_CALL = FALSE;
+   };
+
+   TASK ProcessKeyPress {
+           TYPE = EXTENDED;
+           SCHEDULE = FULL;
+           PRIORITY = 2;
+           ACTIVATION = 1;
+           AUTOSTART = TRUE;
+           STACKSIZE = 128;
+           SCHEDULE_CALL = FALSE;
+           EVENT = { KEYPRESS, SHUFFLED };
+   };
+
+   TASK ShuffleCards {
+           TYPE = BASIC;
+           SCHEDULE = FULL;
+           PRIORITY = 4;
+           ACTIVATION = 1;
+           AUTOSTART = FALSE;
+           STACKSIZE = 64;
+           SCHEDULE_CALL = FALSE;
+           RESOURCE = { CARDDECK };
+   };
+
+   TASK background {
+           TYPE = BASIC;
+           SCHEDULE = FULL;
+           PRIORITY = 1;
+           ACTIVATION = 1;
+           AUTOSTART = TRUE;
+           STACKSIZE = 64;
+           SCHEDULE_CALL = FALSE;
+   };
+
+
+   /**************************************************************************/
+   /*             Alarms                                                     */
+   /**************************************************************************/
+
+   ALARM DealerTurnAlarm {
+           COUNTER = SYSTEM_COUNTER;
+           TASK = DealerTurn;
+           ACTION = ACTIVATETASK;
+   };
+
+   ALARM SampleKeypad {
+           COUNTER = SYSTEM_COUNTER;
+           TASK = IOSampleKeypad;
+           ACTION = ACTIVATETASK;
+   };
+
+   ALARM SampleShuffleSwitchAlarm {
+           COUNTER = SYSTEM_COUNTER;
+           TASK = IOSampleShuffleSwitch;
+           ACTION = ACTIVATETASK;
+   };
+
+   ALARM ShuffleAlarm {
+           COUNTER = SHUFFLE_COUNTER;
+           TASK = ShuffleCards;
+           ACTION = ACTIVATETASK;
+   };
+
+
+   /**************************************************************************/
+   /*             Events                                                     */
+   /**************************************************************************/
+
+   EVENT ABORT_SHUFFLE {
+           MASK = AUTO;
+   };
+
+   EVENT KEYPRESS {
+           MASK = AUTO;
+   };
+
+   EVENT SHUFFLED {
+           MASK = AUTO;
+   };
+
+
+   /**************************************************************************/
+   /*             Resources                                                  */
+   /**************************************************************************/
+
+   RESOURCE CARDDECK {
+           /* No attributes defined */
+   };
+
+   RESOURCE RES_SCHEDULER {
+           /* No attributes defined */
+   };
+
+
+   /**************************************************************************/
+   /*             Counters                                                   */
+   /**************************************************************************/
+
+   COUNTER SHUFFLE_COUNTER {
+           /*@****************************************************************/
+           /* Shuffling Counter                                              */
+           /*@****************************************************************/
+
+           MAXALLOWEDVALUE = 9;
+           TICKSPERBASE = 1;
+           MINCYCLE = 3;
+   };
+
+   COUNTER SYSTEM_COUNTER {
+           MAXALLOWEDVALUE = 65535;
+           TICKSPERBASE = 1000000;
+           MINCYCLE = 1;
+   };
+
+
+   /**************************************************************************/
+   /*             Application Modes                                          */
+   /**************************************************************************/
+
+   APPMODE HEAD_TO_HEAD {
+           VALUE = AUTO;
+   };
+
+   APPMODE SINGLE_PLAYER {
+           VALUE = AUTO;
+   };
+
+   APPMODE TEST {
+           VALUE = AUTO;
+   };
+
+
+   /**************************************************************************/
+   /*             O/S                                                        */
+   /**************************************************************************/
+
+   OS OSEKWorks_os {
+           CC = AUTO;
+           STATUS = EXTENDED;
+           SCHEDULE = AUTO;
+           SYSTEMSTACKSIZE = 1024;
+           StartupHook = TRUE;
+           ErrorHook = TRUE;
+           ShutdownHook = TRUE;
+           PreTaskHook = TRUE;
+           PostTaskHook = TRUE;
+   };
+
+};
+/*#***************************************************************************/
+/* DealCards:42; DealerTurn:65; IOSampleKeypad:2; IOSampleShuffleSwitch:9;   */
+/* InitAlarms:16; OutputDisplay:4; ProcessKeyPress:3; ShuffleCards:7;        */
+/* background:1; DealerTurnAlarm:66; SampleKeypad:14;                        */
+/* SampleShuffleSwitchAlarm:10; ShuffleAlarm:5; ABORT_SHUFFLE:38;            */
+/* KEYPRESS:39; SHUFFLED:37; CARDDECK:158; RES_SCHEDULER:0; 1; 100 0; 300    */
+/* 0; 100 64; 300 64; 100 128; 300 128; 330 48; 100 192; 164 176; 300 192;   */
+/* 32 0; 124 48; 124 48; 164 176; 32 0; 83 48; 32 0; 83 48; 124 48; 164      */
+/* 176; 83 48; 124 48; 164 176; 32 0; 83 48; 124 48; 164 176; 32 0; 32 0;    */
+/* 59 48; 59 48; 83 48; 124 48; 164 176; 83 48; 124 48; 164 176; 32 0; 32    */
+/* 0; 32 0; 93 24; 92 24; 32 0; 59 48; 59 48; 59 48; 59 48; 59 48; 59 48;    */
+/* 93 24; 92 24; 59 48; 59 48; 93 24; 92 24; 83 48; 124 48; 164 176; 59 48;  */
+/* 59 48; 93 24; 92 24; 83 48; 124 48; 164 176; 32 0; 32 0; 60 48; 59 48;    */
+/* 59 48; 93 24; 92 24; 60 48; 83 48; 124 48; 164 176; 59 48; 59 48; 93 24;  */
+/* 92 24; 60 48; 83 48; 124 48; 164 176; 59 48; 59 48; 93 24; 92 24; 60 48;  */
+/* 83 48; 124 48; 164 176; 32 0; 32 0; 32 0; 32 0; 82 48; 88 48; 59 48; 59   */
+/* 48; 93 24; 92 24; 60 48; 83 48; 124 48; 164 176; 82 48; 88 48; 59 48; 59  */
+/* 48; 93 24; 92 24; 60 48; 83 48; 124 48; 164 176; 59 48; 59 48; 93 24; 92  */
+/* 24; 60 48; 83 48; 124 48; 164 176; 93 24; 92 24; 93 24; 92 24; 93 24; 92  */
+/* 24; 59 48; 59 48; 93 24; 92 24; 60 48; 83 48; 124 48; 164 176; 59 48; 59  */
+/* 48; 93 24; 92 24; 60 48; 83 48; 124 48; 164 176; 59 48; 59 48; 59 48; 59  */
+/* 48; 59 48; 59 48; 93 24; 92 24; 60 48; 83 48; 124 48; 164 176; 32 0; 63   */
+/* 48; 59 48; 59 48; 59 48; 59 48; 59 48; 59 48; 93 24; 92 24; 63 48; 60     */
+/* 48; 83 48; 124 48; 164 176; 93 24; 92 24;                                 */
+/*#***************************************************************************/
+

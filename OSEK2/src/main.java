@@ -3,30 +3,27 @@ import java.io.IOException;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import object.OilSpec;
+import sselab.nusek.oil.OilSpec;
+import sselab.nusek.oil.file.OilLexer;
+import sselab.nusek.oil.file.OilParser;
 
 public class main {
 
 	public static void main(String[] args) {
+
 		// TODO Auto-generated method stub
-		CharStream input = null;
-		try {
-			input = new ANTLRFileStream("sselab.oil");
-		} catch (IOException e) {
-			// TODO Auto-generated catch
-			e.printStackTrace();
-		}
-		OilLexer lexer = new OilLexer(input);
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
+		OilSpec spec = null;
+		OilLexer lexer = null;
 		
-		OilParser parser = new OilParser(tokens);
-
-		
-		ParseTree tree = parser.file();
-		OilSpec spec = parser.getOilSpec();
-		System.out.println(spec.toString());
-		//System.out.println(tree.getText());
- 		//System.out.println(tree.toStringTree(parser));
+			try {
+				lexer = new OilLexer("conf.oil");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			OilParser parser = new OilParser(lexer);
+			ParseTree tree = parser.parse();
+			spec = parser.getOilSpec();
+			System.out.println(spec.toString());
 	}
-
 }
