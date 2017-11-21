@@ -1,34 +1,14 @@
 package sselab.nusek.oil.file;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.FailedPredicateException;
-import org.antlr.v4.runtime.NoViableAltException;
-import org.antlr.v4.runtime.Parser;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.RuleContext;
-import org.antlr.v4.runtime.RuntimeMetaData;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
-import org.antlr.v4.runtime.Vocabulary;
-import org.antlr.v4.runtime.VocabularyImpl;
 // Generated from .\Oil.g4 by ANTLR 4.7
-import org.antlr.v4.runtime.atn.ATN;
-import org.antlr.v4.runtime.atn.ATNDeserializer;
-import org.antlr.v4.runtime.atn.ParserATNSimulator;
-import org.antlr.v4.runtime.atn.PredictionContextCache;
+import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.tree.ParseTreeListener;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
-import sselab.nusek.oil.InvalidOilException;
-import sselab.nusek.oil.OilObject;
-import sselab.nusek.oil.OilSpec;
-import sselab.nusek.oil.file.parserControl.OilParserControl;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.*;
+import org.antlr.v4.runtime.tree.*;
+import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class OilParser extends Parser {
@@ -37,32 +17,6 @@ public class OilParser extends Parser {
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
-	
-	/* Need for Parsing */
-	private OilObject currentObject;
-	public String _Name = "";
-	//public Queue attr_list = new LinkedList();
-	/** flag == false is Not List, flag == true is parameter list */
-	//static boolean flag = false;
-	private OilSpec oil = new OilSpec();
-	private OilParserControl ctl = new OilParserControl();
-	public OilSpec getOil() {
-		return oil;
-	}
-
-	public void setOil(OilSpec oil) {
-		this.oil = oil;
-	}
-
-	
-	public OilParserControl getCtl() {
-		return ctl;
-	}
-
-	public void setCtl(OilParserControl ctl) {
-		this.ctl = ctl;
-	}
-	
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
@@ -140,7 +94,12 @@ public class OilParser extends Parser {
 			}
 		}
 	}
-
+	public OilParser(OilLexer input)
+	{
+		super(new CommonTokenStream(input));
+		_interp = new ParserATNSimulator(this, _ATN, _decisionToDFA, _sharedContextCache);
+		
+	}
 	@Override
 	@Deprecated
 	public String[] getTokenNames() {
@@ -164,14 +123,7 @@ public class OilParser extends Parser {
 
 	@Override
 	public ATN getATN() { return _ATN; }
-	
-	public OilParser(OilLexer input)
-	{
-		super(new CommonTokenStream(input));
-		_interp = new ParserATNSimulator(this, _ATN, _decisionToDFA, _sharedContextCache);
-		
-	}
-	
+
 	public OilParser(TokenStream input) {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
@@ -222,9 +174,6 @@ public class OilParser extends Parser {
 		finally {
 			exitRule();
 		}
-		
-		/** After Parsing, Call this method */
-		ctl.finailize(oil); 
 		return _localctx;
 	}
 
@@ -360,13 +309,6 @@ public class OilParser extends Parser {
 			setState(105);
 			match(T__3);
 			setState(106);
-			try {
-				/** set CPU name in application_definition */
-				oil.setCpuName(this.getCurrentToken().getText());
-			} catch (InvalidOilException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			match(NAME);
 			setState(107);
 			match(T__4);
@@ -513,7 +455,6 @@ public class OilParser extends Parser {
 				description();
 				setState(128);
 				match(T__2);
-				ctl.finalizeOilObjCreation(currentObject, oil);
 				}
 				break;
 			case 2:
@@ -525,7 +466,6 @@ public class OilParser extends Parser {
 				description();
 				setState(132);
 				match(T__2);
-				ctl.finalizeOilObjCreation(currentObject, oil);
 				}
 				break;
 			}
@@ -567,15 +507,8 @@ public class OilParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(136);
-			currentObject = ctl.makeObject(this.getCurrentToken().getText());
 			object();
 			setState(137);
-			try {
-				currentObject.setName(this.getCurrentToken().getText());
-			} catch (InvalidOilException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			match(NAME);
 			}
 		}
@@ -764,7 +697,6 @@ public class OilParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			
 			setState(160);
 			object();
 			setState(161);
@@ -777,7 +709,6 @@ public class OilParser extends Parser {
 			description();
 			setState(165);
 			match(T__2);
-			ctl.finalizeOilObjCreation(currentObject, oil);
 			}
 		}
 		catch (RecognitionException re) {
@@ -2654,7 +2585,6 @@ public class OilParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(424);
-			_Name = this.getCurrentToken().getText();
 			attribute_Namedef();
 			setState(425);
 			match(T__1);
@@ -2790,12 +2720,6 @@ public class OilParser extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(434);
-				try {
-					currentObject.addAttribute(_Name, this.getCurrentToken().getText());
-				} catch (NumberFormatException | InvalidOilException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				match(NAME);
 				}
 				break;
@@ -2803,13 +2727,6 @@ public class OilParser extends Parser {
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(435);
-				String value = this.getCurrentToken().getText();
-				try {
-					currentObject.addAttribute(_Name, value);
-				} catch (NumberFormatException | InvalidOilException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				match(NAME);
 				setState(436);
 				match(T__4);
@@ -2823,12 +2740,6 @@ public class OilParser extends Parser {
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(440);
-				try {
-					currentObject.addAttribute(_Name, this.getCurrentToken().getText());
-				} catch (NumberFormatException | InvalidOilException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				bool();
 				}
 				break;
@@ -2836,13 +2747,6 @@ public class OilParser extends Parser {
 				enterOuterAlt(_localctx, 4);
 				{
 				setState(441);
-				String value = this.getCurrentToken().getText();
-				try {
-					currentObject.addAttribute(_Name, value);
-				} catch (NumberFormatException | InvalidOilException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				bool();
 				setState(442);
 				match(T__4);
@@ -2862,13 +2766,7 @@ public class OilParser extends Parser {
 			case 6:
 				enterOuterAlt(_localctx, 6);
 				{
-				setState(447); 
-				try {
-					currentObject.addAttribute(_Name, this.getCurrentToken().getText());
-				} catch (NumberFormatException | InvalidOilException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				setState(447);
 				float_num();
 				}
 				break;
@@ -2876,12 +2774,6 @@ public class OilParser extends Parser {
 				enterOuterAlt(_localctx, 7);
 				{
 				setState(448);
-				try {
-					currentObject.addAttribute(_Name, this.getCurrentToken().getText());
-				} catch (NumberFormatException | InvalidOilException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				match(STRING);
 				}
 				break;
@@ -2889,12 +2781,6 @@ public class OilParser extends Parser {
 				enterOuterAlt(_localctx, 8);
 				{
 				setState(449);
-				try {
-					currentObject.addAttribute(_Name, this.getCurrentToken().getText());
-				} catch (NumberFormatException | InvalidOilException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				match(T__32);
 				}
 				break;
@@ -2905,7 +2791,6 @@ public class OilParser extends Parser {
 				match(T__4);
 				setState(451);
 				attribute_value();
-				
 				setState(456);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
@@ -3023,16 +2908,6 @@ public class OilParser extends Parser {
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(466);
-				String temp = this.getCurrentToken().getText();
-				temp = temp.toUpperCase();
-				temp = temp.replaceFirst("^0X", "");
-				Integer hex = Integer.parseInt(temp, 16);
-				try {
-					currentObject.addAttribute(_Name, hex.toString());
-				} catch (NumberFormatException | InvalidOilException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				match(HEX_NUMBER);
 				}
 				break;
@@ -3304,7 +3179,6 @@ public class OilParser extends Parser {
 	}
 
 	public final Dec_digitsContext dec_digits() throws RecognitionException {
-		String temp="";
 		Dec_digitsContext _localctx = new Dec_digitsContext(_ctx, getState());
 		enterRule(_localctx, 88, RULE_dec_digits);
 		try {
@@ -3320,7 +3194,6 @@ public class OilParser extends Parser {
 					{
 					{
 					setState(494);
-					temp += this.getCurrentToken().getText();
 					match(DIGIT);
 					}
 					}
@@ -3332,15 +3205,6 @@ public class OilParser extends Parser {
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,35,_ctx);
 			} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
-			}
-			if(this.currentObject != null)
-			{
-				try {
-					currentObject.addAttribute(_Name, temp);
-				} catch (NumberFormatException | InvalidOilException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 			}
 		}
 		catch (RecognitionException re) {
@@ -3598,9 +3462,5 @@ public class OilParser extends Parser {
 		for (int i = 0; i < _ATN.getNumberOfDecisions(); i++) {
 			_decisionToDFA[i] = new DFA(_ATN.getDecisionState(i), i);
 		}
-	}
-	public OilSpec getOilSpec() {
-		this.oil.updateCeilingPriority();
-	    return this.oil;
 	}
 }

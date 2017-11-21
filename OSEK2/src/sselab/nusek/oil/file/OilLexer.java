@@ -5,6 +5,9 @@ import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.TokenStream;
+
+import java.io.IOException;
+
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -69,6 +72,11 @@ public class OilLexer extends Lexer {
 	/**
 	 * @deprecated Use {@link #VOCABULARY} instead.
 	 */
+	public OilLexer(String _input) throws IOException
+	{
+		super(new ANTLRFileStream(_input));
+		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
+	}
 	@Deprecated
 	public static final String[] tokenNames;
 	static {
@@ -97,12 +105,7 @@ public class OilLexer extends Lexer {
 		return VOCABULARY;
 	}
 
-	public OilLexer(String _input) throws Exception
-	{
-		super(new ANTLRFileStream(_input));
-		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
-	}
-	
+
 	public OilLexer(CharStream input) {
 		super(input);
 		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
