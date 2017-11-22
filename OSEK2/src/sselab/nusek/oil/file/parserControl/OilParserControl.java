@@ -20,24 +20,48 @@ import sselab.nusek.oil.OilSpec;
 import sselab.nusek.oil.OilTask;
 
 public class OilParserControl {
-  public void taskAppmode_Check(OilSpec oil) {
-	  if(oil.getAppMode() == null)
-	  {
-		  try {
-			oil.setAppMode(new OilAppMode("std"));
-		} catch (InvalidOilException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public void taskAppmode_Check(OilSpec oil) {
+		if (oil.getAppMode() == null) {
+			try {
+				oil.setAppMode(new OilAppMode("std"));
+			} catch (InvalidOilException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-	  }
-    for (OilTask task : oil.getTasks()) {
-      if(task.getAutostart() && task.appMode == null)
-      {
-        task.setAppMode(oil.getAppMode().toString());
-      }
-    }
-    
-  }
+		for (OilTask task : oil.getTasks()) {
+			if (task.getAutostart() && task.appMode == null) {
+				task.setAppMode(oil.getAppMode().toString());
+			}
+		}
+
+	}
+	
+	public void addAttribute(OilObject currentObject, String name, String value, boolean hasList) {
+		if(hasList)
+		{
+			String temp = value.split("{")[0];
+			System.out.println(temp);
+			System.out.println(hasList + " " + name + " " + value);
+			try {
+				currentObject.addAttribute(name, value);
+			} catch (NumberFormatException | InvalidOilException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			System.out.println(hasList + " " + name + " " + value);
+			try {
+				currentObject.addAttribute(name, value);
+			} catch (NumberFormatException | InvalidOilException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
 	public void finalizeOilObjCreation(OilObject currentObject, OilSpec oil) {
 		if (currentObject instanceof OilTask) {
 			oil.addTask((OilTask) currentObject);
@@ -50,12 +74,10 @@ public class OilParserControl {
 		} else if (currentObject instanceof OilISR) {
 			oil.addIsr((OilISR) currentObject);
 		} else if (currentObject instanceof OilOs) {
-			if(oil.getOs() == null)
+			if (oil.getOs() == null)
 				oil.setOs((OilOs) currentObject);
-			else
-			{
-				for(OilAttribute temp : ((OilOs) currentObject).getOtherAttributes())
-				{
+			else {
+				for (OilAttribute temp : ((OilOs) currentObject).getOtherAttributes()) {
 					try {
 						oil.getOs().addAttribute(temp.getName(), temp.getValue());
 					} catch (InvalidOilException e) {
@@ -64,11 +86,11 @@ public class OilParserControl {
 					}
 				}
 			}
-			
+
 		} else if (currentObject instanceof OilAppMode) {
 			oil.addAppMode((OilAppMode) currentObject);
-		} else if (currentObject instanceof OilCounter){
-			oil.addCounter((OilCounter)currentObject);
+		} else if (currentObject instanceof OilCounter) {
+			oil.addCounter((OilCounter) currentObject);
 		}
 	}
 
@@ -132,9 +154,10 @@ public class OilParserControl {
 		oil.updateCeilingPriority();
 		return oil;
 	}
-	public void finailize(OilSpec oil){
+
+	public void finailize(OilSpec oil) {
 		this.setID(oil);
-		if(oil.getOs() == null)
+		if (oil.getOs() == null)
 			try {
 				oil.setOs(new OilOs());
 			} catch (InvalidOilException e) {
@@ -142,8 +165,9 @@ public class OilParserControl {
 				e.printStackTrace();
 			}
 		this.taskAppmode_Check(oil);
-		
+
 	}
+
 	public void setID(OilSpec oil) {
 		// sort task and put ids
 		List<OilObject> objs = new ArrayList<>();
@@ -183,5 +207,5 @@ public class OilParserControl {
 			t.setId(ID++);
 		}
 	}
-  
+
 }
