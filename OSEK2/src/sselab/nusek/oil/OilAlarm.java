@@ -2,6 +2,7 @@ package sselab.nusek.oil;
 
 import java.util.ArrayList;
 
+import org.antlr.v4.parse.ANTLRParser.parserRule_return;
 import org.w3c.dom.css.Counter;
 
 /**
@@ -10,28 +11,14 @@ import org.w3c.dom.css.Counter;
  * @author Wooyong Choi
  * @version 1/8/2016
  */
+
+/**
+ * Oil Alarm
+ * 
+ * @author Taehyun Lee
+ * @version 11/27/2017
+ */
 public class OilAlarm extends OilObject {
-
-	/** OilCounter for OilAlarm */
-	private String counter = "SystemCounter";
-
-	/** Action(AT, SE, ACB) for OilAlarm */
-	private OilAlarmAction action = new OilAlarmAction();
-	// private alarmAction action = alarmAction.ACB;
-
-	/** Autostart for OilAlarm */
-	private boolean autostart = false;
-	private String task = "";
-
-	/** Time to start for OilAlarm */
-	private int alarmTime = 0;
-
-	/** Cycle for OilAlarm */
-	private int cycleTime = 0;
-
-	/** Appmode for OilAlarm */
-	private String appMode = null;
-
 	public OilAlarm() {
 	}
 
@@ -43,10 +30,10 @@ public class OilAlarm extends OilObject {
 	 * @param action
 	 * @throws InvalidOilException
 	 */
-	public OilAlarm(String name, String counter, OilAlarmAction action) throws InvalidOilException {
+	public OilAlarm(String name, String counter, String action) throws InvalidOilException {
 		setName(name);
-		this.counter = counter;
-		this.action = action;
+		setCounter(counter);
+		setAction(action);
 	}
 
 	/**
@@ -60,15 +47,15 @@ public class OilAlarm extends OilObject {
 	 * @param appMode
 	 * @throws InvalidOilException
 	 */
-	public OilAlarm(String name, String counter, OilAlarmAction action, int alarmTime, int cycleTime, String appMode)
+	public OilAlarm(String name, String counter, String action, int alarmTime, int cycleTime, String appMode)
 			throws InvalidOilException {
 		this.setName(name);
-		this.counter = counter;
-		this.action = action;
-		this.autostart = true;
-		this.alarmTime = alarmTime;
-		this.cycleTime = cycleTime;
-		this.appMode = appMode;
+		setCounter(counter);
+		setAction(action);
+		setAutostart(true);
+		setAlarmTime(alarmTime);
+		setCycleTime(cycleTime);
+		setAppMode(appMode);
 	}
 
 	/**
@@ -77,101 +64,12 @@ public class OilAlarm extends OilObject {
 	 */
 	public OilAlarm(OilAlarm alarm) throws InvalidOilException {
 		this.setName(alarm.getName());
-		this.counter = alarm.counter;
-		this.action = alarm.action;
-		this.autostart = alarm.autostart;
-		this.alarmTime = alarm.alarmTime;
-		this.cycleTime = alarm.cycleTime;
-		this.appMode = alarm.appMode;
-	}
-
-	@Override
-	public void addAttribute(String list_name, String list_value, String name, String value)
-			throws NumberFormatException, InvalidOilException {
-		// TODO Auto-generated method stub
-		list_name = list_name.toUpperCase();
-		name = name.toUpperCase();
-		switch (list_name) {
-		case "ACTION":
-			this.action.setAction(list_value);
-			if (list_value.equals("SETEVENT"))
-			{
-			  switch (name) {
-			  case "TASK":
-			    this.action.setTask(value);
-			    break;
-			  case "EVENT":
-			    this.action.setEvent(value);
-			    break;
-			  }
-			}
-			else if (list_value.equals("ACTIVATETASK"))
-				this.action.setTask(value);
-			else if (list_value.equals("ALARMCALLBACK"))
-				this.action.setAlarmCallBack(value);
-			else {
-			}
-			/* error case */
-		case "AUTOSTART":
-			if (list_value.equals("TRUE")) {
-				setAutostart(true);
-				switch (name) {
-				case "APPMODE":
-					setAppMode(value);
-					break;
-				case "ALARMTIME":
-					setAlarmTime(Integer.parseInt(value));
-					break;
-				case "CYCLETIME":
-					setCycleTime(Integer.parseInt(value));
-					break;
-				}
-			} 
-		default:
-			/* error case */
-			break;
-		}
-	}
-
-	@Override
-	public void addAttribute(String name, String value) throws NumberFormatException, InvalidOilException {
-		name = name.toUpperCase();
-		switch (name) {
-		case "COUNTER":
-			setCounter(value);
-			break;
-		case "TASK":
-			this.action.setTask(value);
-			break;
-		case "AUTOSTART":
-			if (value.equals("TRUE"))
-				setAutostart(true);
-			else
-				setAutostart(false);
-			break;
-		case "ALARMTIME":
-			if (this.autostart)
-				setAlarmTime(Integer.parseInt(value));
-			break;
-		case "CYCLETIME":
-			setCycleTime(Integer.parseInt(value));
-			break;
-		case "APPMODE":
-			setAppMode(value);
-			break;
-		case "ACTION":
-			if (name.equals("SETEVENT"))
-				this.action.setEvent(value);
-			else if (name.equals("ACTIVATETASK"))
-				this.action.setTask(value);
-			else if (name.equals("ALARMCALLBACK"))
-				this.action.setAlarmCallBack(value);
-			else {
-				/* error case */}
-			break;
-		default:
-			break;
-		}
+		setCounter(alarm.getCounter());
+		setAction(alarm.getAction());
+		setAutostart(alarm.isAutostart());
+		setAlarmTime(alarm.getAlarmTime());
+		setCycleTime(alarm.getCycleTime());
+		setAppMode(alarm.getAppMode());
 	}
 
 	/**
@@ -190,10 +88,10 @@ public class OilAlarm extends OilObject {
 	 * @return compressed start
 	 */
 	public int getCompressedStart() {
-		if (!autostart || alarmTime == 0)
+		if (!isAutostart() || getAlarmTime() == 0)
 			return 0;
 
-		return alarmTime / 100;
+		return getAlarmTime() / 100;
 	}
 
 	/**
@@ -202,74 +100,281 @@ public class OilAlarm extends OilObject {
 	 * @return compressed cycle
 	 */
 	public int getCompressedCycle() {
-		if (!autostart || cycleTime == 0)
+		if (!isAutostart() || getCycleTime() == 0)
 			return 0;
 
-		return cycleTime / 100;
+		return getCycleTime() / 100;
+	}
+
+	/** default value is SystemCounter **/
+	public String getCounter() {
+		OilAttribute attr = this.findAttr("COUNTER");
+		String value = "SystemCounter";
+		if (attr != null)
+			value = attr.getValue();
+		return value;
+	}
+
+	public void setCounter(String value) {
+		OilAttribute attr = this.findAttr("COUNTER");
+		if (attr == null) {
+			this.addAttr(new OilAttribute("COUNTER", value));
+			return;
+		}
+		attr.setValue(value);
+	}
+
+	public boolean isAutostart() {
+		OilObject obj = this.findObj("AUTOSTART");
+		Boolean value = false;
+		if (obj != null)
+			value = Boolean.parseBoolean(obj.getValue());
+		return value;
+	}
+
+	public void setAutostart(boolean autostart) {
+		OilObject obj = this.findObj("AUTOSTART");
+		if (obj == null) {
+			this.addObj(new OilObject_Attribute("AUTOSTART", Boolean.toString(autostart)));
+			return;
+		}
+		obj.setValue(Boolean.toString(autostart));
+	}
+
+	public int getAlarmTime() {
+		OilObject obj = this.findObj("AUTOSTART");
+		Integer value = 0;
+		if (obj == null) {
+			OilAttribute attr = this.findAttr("ALARMTIME");
+			if (attr != null)
+				value = Integer.parseInt(attr.getValue());
+
+			return value;
+		} else {
+			OilAttribute attr = obj.findAttr("ALARMTIME");
+			if (attr != null)
+				value = Integer.parseInt(attr.getValue());
+			return value;
+		}
+	}
+
+	public void setAlarmTime(int alarmTime) {
+		OilObject obj = this.findObj("AUTOSTART");
+		if (obj == null) {
+			obj = new OilObject_Attribute("AUTOSTART", "TRUE");
+			this.addObj(obj);
+		}
+
+		OilAttribute attr = obj.findAttr("ALARMTIME");
+		if (attr == null) {
+			obj.addAttr(new OilAttribute("ALARMTIME", Integer.toString(alarmTime)));
+		} else {
+			attr.setValue(Integer.toString(alarmTime));
+		}
+	}
+
+	public int getCycleTime() {
+		OilObject obj = this.findObj("AUTOSTART");
+		Integer value = 0;
+		if (obj == null) {
+			OilAttribute attr = this.findAttr("CYCLETIME");
+			if (attr != null)
+				value = Integer.parseInt(attr.getValue());
+			return value;
+		} else {
+			OilAttribute attr = obj.findAttr("CYCLETIME");
+			if (attr != null)
+				value = Integer.parseInt(attr.getValue());
+			return value;
+		}
+
+	}
+
+	public void setCycleTime(int cycleTime) {
+		OilObject obj = this.findObj("AUTOSTART");
+		if (obj == null) {
+			obj = new OilObject_Attribute("AUTOSTART", "TRUE");
+			this.addObj(obj);
+		}
+
+		OilAttribute attr = obj.findAttr("CYCLETIME");
+		if (attr == null) {
+			obj.addAttr(new OilAttribute("CYCLETIME", Integer.toString(cycleTime)));
+		} else {
+			attr.setValue(Integer.toString(cycleTime));
+		}
+	}
+
+	public String getAppMode() {
+		OilObject obj = this.findObj("AUTOSTART");
+		if (obj == null) {
+			OilAttribute attr = this.findAttr("APPMODE");
+			if (attr != null)
+				return attr.getValue();
+			return "";
+		} else {
+			OilAttribute attr = obj.findAttr("APPMODE");
+			if (attr != null)
+				return attr.getValue();
+			return "";
+		}
+
+	}
+
+	public void setAppMode(String appMode) {
+		OilObject obj = this.findObj("AUTOSTART");
+		if (obj == null)
+			return;
+
+		OilAttribute attr = obj.findAttr("APPMODE");
+		if (attr != null)
+			attr.setValue(appMode);
+		else {
+			OilAttribute temp = new OilAttribute("APPMODE", appMode);
+			this.addAttr(temp);
+		}
+	}
+
+	public String getAction() {
+		OilObject obj = this.findObj("ACTION");
+		if (obj != null)
+			return obj.getValue();
+		return "ALARMCALLBACK"; // default value
+	}
+
+	public void setAction(String action) {
+		OilObject obj = this.findObj("ACTION");
+		if(obj == null)
+		{
+			this.addObj(new OilObject_Attribute("ACTION", action));
+			return;
+		}
+		obj.setValue(action);
+	}
+
+	/** Task is in ACTION OBJECT **/
+	public String getTask() {
+		OilObject obj = this.findObj("ACTION");
+		if (obj == null)
+			return null;
+
+		OilAttribute attr = obj.findAttr("TASK");
+		if (attr != null)
+			return attr.getValue();
+		return null;
+	}
+
+	public void setTask(String task) {
+		OilObject obj = this.findObj("ACTION");
+		if (obj == null)
+		{
+			obj = new OilObject_Attribute("ACTION", "ACTIVATETASK");
+			this.addObj(obj);
+		}
+
+		OilAttribute attr = obj.findAttr("TASK");
+		if(attr == null){
+			obj.addAttr(new OilAttribute("TASK", task));
+		}
+		else{
+			attr.setValue(task);
+		}
+	}
+
+	public String getEvent() {
+		OilObject obj = this.findObj("ACTION");
+		if(obj == null) return "";
+		OilAttribute attr = obj.findAttr("EVENT");
+
+		if (attr != null)
+			return attr.getValue();
+		return "";
+	}
+
+	public void setEvent(String event) {
+		OilObject obj = this.findObj("ACTION");
+		if (obj == null)
+		{
+			obj = new OilObject_Attribute("ACTION", "SETEVENT");
+			this.addObj(obj);
+		}
+		
+		OilAttribute attr = obj.findAttr("EVENT");
+		if(attr == null){
+			obj.addAttr(new OilAttribute("EVENT", event));
+		}
+		else{
+			attr.setValue(event);
+		}
+	}
+
+	public String getAlarmCallBack() {
+		OilObject obj = this.findObj("ACTION");
+		if(obj == null) return "";
+		OilAttribute attr = obj.findAttr("ALARMCALLBACK");
+		if (attr != null)
+			return attr.getValue();
+		return "";
+	}
+
+	public void setAlarmCallBack(String alarmcallback) {
+		OilObject obj = this.findObj("ACTION");
+		if (obj == null)
+		{
+			obj = new OilObject_Attribute("ACTION", "ALARMCALLBACK");
+			this.addObj(obj);
+		}
+		
+		
+		OilAttribute attr = obj.findAttr("ALARMCALLBACK");
+		if(attr == null){
+			obj.addAttr(new OilAttribute("ALARMCALLBACK", alarmcallback));
+		}
+		else{
+			attr.setValue(alarmcallback);
+		}
 	}
 
 	@Override
 	public String toString() {
 		return "OilAlarm: " + this.getName() + ", " + getCounter() + ", " + getAction().toString() + ", "
 				+ isAutostart() + ", " + getAlarmTime() + ", " + getCycleTime() + ", " + getAppMode() + " ,"
-				+ this.action.getTask();
+				+ this.getTask();
 	}
+	
+	public String allObjectString(OilObject a, String space) {
+		String temp = "";
+		if (a instanceof OilAlarm) {
+			temp += space + "ALARM " + a.getName() + "{\n";
+		}
 
-	public String getCounter() {
-		return counter;
-	}
+		for (OilAttribute attr : a.getAttr()) {
+			if( a.getName().equals("ACTION"))
+			{
+				switch(a.getValue()){
+				case "ALARMCALLBACK":
+					break;
+				case "ACTIVATETASK":
+					break;
+				case "SETEVENT":
+					break;
+				}
+			}
+			temp += space + "\t" + attr.getName() + " = " + attr.getValue() + ";\n";
+		}
 
-	public void setCounter(String value) {
-		this.counter = value;
-	}
-
-	public boolean isAutostart() {
-		return autostart;
-	}
-
-	public void setAutostart(boolean autostart) {
-		this.autostart = autostart;
-	}
-
-	public int getAlarmTime() {
-		return alarmTime;
-	}
-
-	public void setAlarmTime(int alarmTime) {
-		this.alarmTime = alarmTime;
-	}
-
-	public int getCycleTime() {
-		return cycleTime;
-	}
-
-	public void setCycleTime(int cycleTime) {
-		this.cycleTime = cycleTime;
-	}
-
-	public String getAppMode() {
-		return appMode;
-	}
-
-	public void setAppMode(String appMode) {
-		this.appMode = appMode;
-	}
-
-
-	public OilAlarmAction getAction() {
-		return action;
-	}
-
-	public void setAction(OilAlarmAction action) {
-		this.action = action;
-	}
-
-	public String getTask() {
-		return task;
-	}
-
-	public void setTask(String task) {
-		this.task = task;
+		for (OilObject obj : a.getObj()) {
+			if(obj.getName().equals("AUTOSTART") && obj.getValue().toUpperCase().equals("FALSE")){
+				temp +=space + "\t" + obj.getName() + " = " + obj.getValue() + ";\n";
+				continue;
+			}
+			else {
+				temp += space + "\t" + obj.getName() + " = " + obj.getValue() + " {\n";
+				temp += allObjectString(obj, space + "\t");
+			}
+		}
+		temp += space + "};\n";
+		return temp;
 	}
 
 }

@@ -10,7 +10,12 @@ import java.util.List;
  * @author Wooyong Choi
  * @version 28/7/2016
  */
-
+/**
+ * OIL ISR
+ * 
+ * @author Taehyun Lee
+ * @version 11/27/2017
+ */
 public class OilISR extends OilObject {
 
   private String name;
@@ -49,31 +54,6 @@ public class OilISR extends OilObject {
       this.accessibleMessages.add(element);
   }
 
-  @Override
-  public void addAttribute(String name, String value)
-      throws NumberFormatException, InvalidOilException {
-		name = name.toUpperCase();
-    switch (name) {
-    case "CATEGORY":
-      setCategory(Integer.parseInt(value));
-      break;
-    case "PRIORITY":
-      setPriority(Integer.parseInt(value));
-      break;
-    case "SOURCE":
-      setSource(Signal.toEnum(value));
-      break;
-    case "RESOURCE":
-      addResource(value);
-      break;
-    case "MESSAGE":
-      // addMessage(value);
-      break; 
-    default:
-      break;
-    }
-  }
-  
   public void addResource(String name) {
     accessibleResources.add(name);
   }
@@ -171,10 +151,4 @@ public class OilISR extends OilObject {
 
 
 
-@Override
-public void addAttribute(String list_name, String list_value, String name, String value)
-		throws NumberFormatException, InvalidOilException {
-	// TODO Auto-generated method stub
-	
-}
 }

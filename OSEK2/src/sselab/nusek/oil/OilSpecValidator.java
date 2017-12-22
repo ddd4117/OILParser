@@ -76,14 +76,9 @@ class OilSpecValidator {
     for (OilTask task : tasks) {
       if (task.isAutostart()) {
         final String errMsg = "Autostart tasks shall always have an APPMODE";
-        try {
-          if ("".equals(task.getAppMode())) {
+        if ("".equals(task.getAppMode())) {
             throw new InvalidOilException(errMsg);
           }
-        } catch (IllegalAccessException e) {
-          // this exception is thrown when task.appMode is null
-          throw new InvalidOilException(errMsg);
-        }
       }
     }
   }

@@ -2,9 +2,9 @@ package sselab.nusek.oil.file.parserControl;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
-import java.util.Queue;
 
 import sselab.nusek.oil.InvalidOilException;
 import sselab.nusek.oil.OilAlarm;
@@ -14,6 +14,7 @@ import sselab.nusek.oil.OilCounter;
 import sselab.nusek.oil.OilEvent;
 import sselab.nusek.oil.OilISR;
 import sselab.nusek.oil.OilObject;
+import sselab.nusek.oil.OilObject_Attribute;
 import sselab.nusek.oil.OilOs;
 import sselab.nusek.oil.OilResource;
 import sselab.nusek.oil.OilSpec;
@@ -30,40 +31,46 @@ public class OilParserControl {
 			}
 		}
 		for (OilTask task : oil.getTasks()) {
-			if (task.getAutostart() && task.appMode == null) {
+			if (task.isAutostart() && task.getAppMode() == null) {
 				task.setAppMode(oil.getAppMode().toString());
 			}
 		}
 
 	}
-	
-	public void addAttribute(OilObject currentObject, String name, String value, boolean hasList) {
-		if(hasList)
-		{
-			String temp = value.split("{")[0];
-			System.out.println(temp);
-			System.out.println(hasList + " " + name + " " + value);
-			try {
-				currentObject.addAttribute(name, value);
-			} catch (NumberFormatException | InvalidOilException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		else
-		{
-			System.out.println(hasList + " " + name + " " + value);
-			try {
-				currentObject.addAttribute(name, value);
-			} catch (NumberFormatException | InvalidOilException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
+
+	public void addObject(String name, String value, OilObject obj) {
+		// System.out.println("\t" + name + " " + value);
+		obj.addAttr(new OilAttribute(name, value));
 	}
+	
 	public void finalizeOilObjCreation(OilObject currentObject, OilSpec oil) {
 		if (currentObject instanceof OilTask) {
+			OilAttribute attr = currentObject.findAttr("RESOURCE");
+			if(attr != null){
+				OilObject obj = new OilObject_Attribute("RESOURCE");
+				Iterator<OilAttribute> iter = currentObject.getAttr().iterator();
+				while(iter.hasNext()){
+					OilAttribute temp = iter.next();
+					if(temp.getName().equals("RESOURCE")){
+						obj.addAttr(temp);
+						iter.remove();
+					}
+				}
+				currentObject.addObj(obj);
+			}
+			attr = currentObject.findAttr("EVENT");
+			if(attr != null){
+				OilObject obj = new OilObject_Attribute("EVENT");
+				Iterator<OilAttribute> iter = currentObject.getAttr().iterator();
+				while(iter.hasNext()){
+					OilAttribute temp = iter.next();
+					if(temp.getName().equals("EVENT")){
+						obj.addAttr(temp);
+						iter.remove();
+					}
+				}
+				currentObject.addObj(obj);
+			}
 			oil.addTask((OilTask) currentObject);
 		} else if (currentObject instanceof OilEvent) {
 			oil.addEvent((OilEvent) currentObject);
@@ -78,12 +85,7 @@ public class OilParserControl {
 				oil.setOs((OilOs) currentObject);
 			else {
 				for (OilAttribute temp : ((OilOs) currentObject).getOtherAttributes()) {
-					try {
-						oil.getOs().addAttribute(temp.getName(), temp.getValue());
-					} catch (InvalidOilException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					oil.getOs().addAttr(new OilAttribute(temp.getName(), temp.getValue()));
 				}
 			}
 
@@ -133,21 +135,6 @@ public class OilParserControl {
 			break;
 		}
 		return object;
-	}
-
-	public void addAttribute_list(Queue attr_list, OilObject currentObject) {
-		String list_name = (String) attr_list.poll();
-		String list_value = (String) attr_list.poll();
-		while (attr_list.peek() != null) {
-			String name = (String) attr_list.poll();
-			String value = (String) attr_list.poll();
-			try {
-				currentObject.addAttribute(list_name, list_value, name, value);
-			} catch (NumberFormatException | InvalidOilException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 	}
 
 	public OilSpec getOilSpec(OilSpec oil) {

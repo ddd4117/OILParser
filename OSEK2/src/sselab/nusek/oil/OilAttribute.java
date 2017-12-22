@@ -10,6 +10,11 @@ public class OilAttribute {
   private String name;
   private String value;
 
+  public OilAttribute(String name)
+  {
+	  this.name = name;
+	  this.value = "";
+  }
   public OilAttribute(String name, String value) {
     this.name = name;
     this.value = value;

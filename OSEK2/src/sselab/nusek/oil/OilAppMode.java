@@ -25,21 +25,4 @@ public class OilAppMode extends OilObject {
   public String toString() {
     return "OilAppMode: " + this.getName();
   }
-
-  @Override
-  public void addAttribute(String name, String value)
-      throws NumberFormatException, InvalidOilException {
-    //TODO
-    //should never be called
-    assert false;
-  }
-
-@Override
-public void addAttribute(String list_name, String list_value, String name, String value)
-		throws NumberFormatException, InvalidOilException {
-	// TODO Auto-generated method stub
-	
-}
-
-
 }
